@@ -99,6 +99,31 @@ function App() {
 
 ### 使用说明
 
+#### 按需引入样式
+
+-   按需引入样式，或者全量或者按需引入 antd 样式，这个样式完全是 antd 的，如果全量引入可以不引 css
+
+```js
+import "chatbot-antd/index.css";
+```
+
+-   按需引入需要引入,引入对应的 less 也可以。
+
+```
+antd/lib/style/index.css
+antd/lib/button/style/index.css
+antd/lib/avatar/style/index.css
+antd/lib/input/style/index.css
+antd/lib/modal/style/index.css
+antd/lib/popover/style/index.css
+```
+
+-   全量引入直接：
+
+```
+import "antd/dist/antd.css";
+```
+
 #### library 语料库
 
 -   语料库部分，是跟主体进行分离的，可以不用，直接对接平台。
@@ -175,6 +200,11 @@ export interface RenderList {
 -   isUser 表示是否是用户所发。
 
 -   text 表示每条对话。其中用户所发的 text 类型为 string，而机器人所发 text 类型可以是 ReactNode。
+
+#### 响应生成器 generateRespones
+
+-   这个函数结合 library 用正则去匹配收到的语句，从而返回机器人的响应。
+-   如果觉得不好用可以自己制作响应生成器。
 
 #### 修改样式
 

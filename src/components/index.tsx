@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { EnterOutlined } from "@ant-design/icons";
 import { RobotItem } from "./listItem";
-
+import "./index.css";
 export * from "./dataValidate";
 export * from "./listItem";
 

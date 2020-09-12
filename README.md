@@ -1,44 +1,174 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 基于 Antd 制作的纯前端客服机器人
 
-## Available Scripts
+### 简介
 
-In the project directory, you can run:
+-   由于客服机器人场景使用很多，大部分都需要前后端通信，甚至可能还需要智能对话平台利用 nlp 进行处理，不说那些平台需要花钱，如果自己写前后端写起来也相当麻烦，所以我着手制作了个只需要前端并且支持对话定制的客服机器人。当然，同时支持使用后端或者平台。
+-   ui 使用了 antd，这样很多人能看得懂代码并且方便定制修改。几乎所有样式都暴露出来，可以直接进行修改样式。antd 配置项也几乎全部暴露出来，满足各种特殊需要。
 
-### `yarn start`
+### 快速上手
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+-   需要 react 版本 16.8 以上，支持 hooks。
+-   需要 antd4。
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+```tsx
+import React, { useCallback, useState } from "react";
+import { useRegister } from "./components";
+import { CustomerServiceOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+import "antd/dist/antd.css";
+import { library, generateRespones, RenderList } from "./components/index";
 
-### `yarn test`
+//text是语句，reg会生成正则匹配，useReg会使用自定义匹配
+library.push(
+	//语料库，push进去，也可以不用
+	{
+		text: "我是机器人",
+		reg: "你是谁",
+	},
+	{
+		text: "author is yehuozhili",
+		useReg: /(.*?)作者是谁(.*?)/,
+	},
+	{
+		text: <CustomerServiceOutlined></CustomerServiceOutlined>,
+		useReg: /(.*?)表情(.*?)/,
+	}
+);
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+function App() {
+	const [modalOpen, setModalOpen] = useState(false);
+	//使用useCllback避免用户输入时调用匹配！！！！！！！
+	const callb = useCallback((v: RenderList) => {
+		setTimeout(() => {
+			//使用settimeout 更像机器人回话
+			let returnValue = generateRespones(v);
+			if (returnValue) {
+				//排除null
+				setList((prev) => [
+					...prev,
+					{ isUser: false, text: returnValue },
+				]);
+			}
+		}, 500);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-### `yarn build`
+	// 注册
+	const [render, setList] = useRegister(
+		modalOpen,
+		callb,
+		{
+			onOk: () => setModalOpen(false),
+			onCancel: () => setModalOpen(false),
+			title: "h5-Dooring机器人客服",
+		},
+		{},
+		<div>welcome!我是机器人初始欢迎语句！！</div>
+	);
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+	return (
+		<div>
+			<div
+				style={{
+					position: "fixed",
+					right: "10px",
+					top: "40%",
+				}}
+			>
+				<Button type="primary" onClick={() => setModalOpen(!modalOpen)}>
+					<CustomerServiceOutlined></CustomerServiceOutlined>
+				</Button>
+			</div>
+			{render}
+		</div>
+	);
+}
+```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### 使用说明
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### library 语料库
 
-### `yarn eject`
+-   语料库部分，是跟主体进行分离的，可以不用，直接对接平台。
+-   使用语料库导入 library 后自己配置即可，text 是机器人需要返回的话，reg 会生成正则匹配，useReg 则会使用自定义正则进行匹配。
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```typescript
+library.push(
+	//语料库，push进去，也可以不用
+	{
+		text: "我是机器人",
+		reg: "你是谁",
+	},
+	{
+		text: "author is yehuozhili",
+		useReg: /(.*?)作者是谁(.*?)/,
+	},
+	{
+		text: <CustomerServiceOutlined></CustomerServiceOutlined>,
+		useReg: /(.*?)表情(.*?)/,
+	}
+);
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### useRegister 注册钩子
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+-   这个是自定义钩子，也是主体部分，传入参数，以及返回格式：
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```typescript
+export function useRegister(
+	//modal状态,只有开启状态才能开启Modal
+	state: boolean,
+	//获取用户回话的回调，用户输入会通过callback传回
+	callback?: (v: RenderList) => void,
+	//这个是antd的modal属性，参考antd官网
+	modalOption?: ModalProps,
+	//这个是input属性，参考antd官网
+	inputOption?: InputProps,
+	//这个是机器人语句，就是第一次打开后机器人发的语句
+	initWelcome?: ReactNode,
+	//这个是初始值，如果需要持久化可以考虑使用
+	initState?: RenderList[]
+): [ReactNode, React.Dispatch<React.SetStateAction<RenderList[]>>];
+```
 
-## Learn More
+-   返回里可以拿到 render 渲染结果以及 setList 来设置对话框中的聊天语句。
+-   值得注意的是 callback 设置语句请使用 useCallback 将函数作为常驻变量，否则用户每次输入都会触发：
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```tsx
+const callback = useCallback((v: RenderList) => {
+	setTimeout(() => {
+		//使用settimeout 更像机器人回话
+		let returnValue = generateRespones(v);
+		if (returnValue) {
+			//排除null
+			setList((prev) => [...prev, { isUser: false, text: returnValue }]);
+		}
+	}, 500);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+-   callback 传入 register 的第二个参数。
+-   callback 可以直接去发请求给平台获取结果，再 setList 回来，让机器人发送。
+
+-   setList 的格式为：
+
+```tsx
+export interface RenderList {
+	isUser: boolean;
+	text: ReactNode;
+}
+```
+
+-   isUser 表示是否是用户所发。
+
+-   text 表示每条对话。其中用户所发的 text 类型为 string，而机器人所发 text 类型可以是 ReactNode。
+
+#### 修改样式
+
+-   可以直接靠 css 修改。
+-   不少样式都以变量方式暴露出来，可以参考源码导入暴露的变量进行修改。
+
+#### 修改头像
+
+-   修改头像请导入暴露的变量 robotAvatarOptions 或者 userAvatarOptions，去除 icon，传入 children 进行修改。

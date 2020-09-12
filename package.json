@@ -1,6 +1,6 @@
 {
 	"name": "chatbot-antd",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"private": false,
 	"license": "MIT",
 	"description": "chatbot-antd ; 基于Antd制作的客服机器人",
@@ -17,7 +17,7 @@
 	"files": [
 		"dist"
 	],
-	"homepage": "https://github.com/yehuozhili/chatbot-antd",
+	"homepage": ".",
 	"author": "yehuozhili",
 	"repository": {
 		"type": "git",

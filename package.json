@@ -17,8 +17,12 @@
 	"files": [
 		"dist"
 	],
-	"homepage": ".",
+	"homepage": "https://github.com/yehuozhili/chatbot-antd",
 	"author": "yehuozhili",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yehuozhili/chatbot-antd"
+	},
 	"peerDependencies": {
 		"react": ">=16.8.0",
 		"react-dom": ">=16.8.0",

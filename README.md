@@ -1,5 +1,8 @@
 ## 基于 Antd 制作的纯前端客服机器人
 
+![build](https://github.com/yehuozhili/chatbot-antd/workflows/build/badge.svg)
+![npm](https://img.shields.io/npm/v/chatbot-antd)
+
 ### 简介
 
 -   由于客服机器人场景使用很多，大部分都需要前后端通信，甚至可能还需要智能对话平台利用 nlp 进行处理，不说那些平台需要花钱，如果自己写前后端写起来也相当麻烦，所以我着手制作了个只需要前端并且支持对话定制的客服机器人。当然，同时支持使用后端或者平台。
@@ -9,6 +12,11 @@
 
 -   需要 react 版本 16.8 以上，支持 hooks。
 -   需要 antd4。
+-   安装：
+
+```
+npm i chatbot-antd
+```
 
 ```tsx
 import React, { useCallback, useState } from "react";
@@ -176,3 +184,10 @@ export interface RenderList {
 #### 修改头像
 
 -   修改头像请导入暴露的变量 robotAvatarOptions 或者 userAvatarOptions，去除 icon，传入 children 进行修改。
+
+### 效果演示
+
+-   预览地址：https://yehuozhili.github.io/chatbot-antd/
+-   此预览地址的语料库为 demo 中的那几个
+
+<img src='https://github.com/yehuozhili/chatbot-antd/blob/master/demo/demo.gif'/>

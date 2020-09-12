@@ -3,6 +3,7 @@ import { InputProps } from "antd/lib/input";
 import Modal, { ModalProps } from "antd/lib/modal/Modal";
 import React, {
 	ReactNode,
+	useCallback,
 	useEffect,
 	useLayoutEffect,
 	useMemo,
@@ -53,35 +54,32 @@ export function useRegister(
 		return { ...defaultInputOption, ...inputOption };
 	}, [inputOption]);
 
+	const submit = useCallback(() => {
+		if (inputValue !== "") {
+			setList((prev) => {
+				return [...prev, { isUser: true, text: inputValue }];
+			});
+			setInputValue("");
+		}
+	}, [inputValue]);
+
 	const finalModalOption = useMemo(() => {
 		const footer = (
 			<div style={{ display: "flex" }}>
 				<Input
 					value={inputValue}
 					onChange={(e) => setInputValue(e.target.value)}
+					onPressEnter={submit}
 					{...finalInputOption}
 				></Input>
-				<Button
-					style={{ marginLeft: "5px" }}
-					onClick={() => {
-						if (inputValue !== "") {
-							setList((prev) => {
-								return [
-									...prev,
-									{ isUser: true, text: inputValue },
-								];
-							});
-							setInputValue("");
-						}
-					}}
-				>
+				<Button style={{ marginLeft: "5px" }} onClick={submit}>
 					<EnterOutlined />
 				</Button>
 			</div>
 		);
 
 		return { ...defaultModalOption, footer, ...modalOption };
-	}, [finalInputOption, inputValue, modalOption]);
+	}, [finalInputOption, inputValue, modalOption, submit]);
 	//这个为了使得滚动条始终保持最底
 	useLayoutEffect(() => {
 		const dom = document.querySelector(".yehuozhili");

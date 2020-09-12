@@ -12,11 +12,15 @@
 
 ```tsx
 import React, { useCallback, useState } from "react";
-import { useRegister } from "./components";
 import { CustomerServiceOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import "antd/dist/antd.css";
-import { library, generateRespones, RenderList } from "./components/index";
+import {
+	library,
+	generateRespones,
+	RenderList,
+	useRegister,
+} from "chatbot-antd";
 
 //text是语句，reg会生成正则匹配，useReg会使用自定义匹配
 library.push(

@@ -17,6 +17,7 @@
 	"files": [
 		"dist"
 	],
+	"homepage": ".",
 	"author": "yehuozhili",
 	"peerDependencies": {
 		"react": ">=16.8.0",

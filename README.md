@@ -164,7 +164,9 @@ export function useRegister(
 	//这个是机器人语句，就是第一次打开后机器人发的语句
 	initWelcome?: ReactNode,
 	//这个是初始值，如果需要持久化可以考虑使用
-	initState?: RenderList[]
+	initState?: RenderList[],
+	//是否关闭输入框上方功能条
+	closeFunctionBar?: boolean
 ): [ReactNode, React.Dispatch<React.SetStateAction<RenderList[]>>];
 ```
 
@@ -214,6 +216,14 @@ export interface RenderList {
 #### 修改头像
 
 -   修改头像请导入暴露的变量 robotAvatarOptions 或者 userAvatarOptions，去除 icon，传入 children 进行修改。
+
+### 更新日志 changelog
+
+-   如果有需要请自行下载对应版本：npm i chatbot-antd@版本号
+-   0.6.0 增加清空功能与发送图片功能
+-   0.5.0 增加按需引入 css
+-   0.3.0 增加回车键发送功能
+-   0.2.0 基本完成功能
 
 ### 效果演示
 

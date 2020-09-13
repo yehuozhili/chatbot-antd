@@ -27,6 +27,5 @@ export function generateRespones(v: RenderList): ReactNode {
 		}
 		return null;
 	}
-	console.error("user input invalid type");
 	return null;
 }
